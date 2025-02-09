@@ -23,6 +23,15 @@ module.exports =  {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: true, // Default to 'true' if not provided
+      },created_ts: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,  // Automatically set on create
+      },
+      updated_ts: {
+        type: Sequelize.DATE,
+        allowNull: true,
+        defaultValue: null,  // Automatically set on update
       },
     })
   },

@@ -3,7 +3,6 @@ import crypto from 'crypto'
 import { Request, Response } from 'express'
 import SessionToken from '../models/sessionTokenModel'
 import User from '../models/userModel' // Import the User model
-import { body, validationResult } from 'express-validator';
 import Joi from 'joi';
 
 // Function to generate tokens in xxxx-xxxx-xxxx-xxxx-xxxx format

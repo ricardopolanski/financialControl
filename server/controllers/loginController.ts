@@ -27,7 +27,7 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
       
       await User.update(
         { last_frustated_login: new Date() },
-        { where: { username: "john_doe" } }
+        { where: { username: username } }
       );      
 
       if (user.frustated_login_count === 3 && user.active) {

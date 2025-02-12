@@ -1,9 +1,11 @@
 'use strict';
 
+const { allow } = require('joi');
+
 /** @type {import('sequelize-cli').Migration} */
 // module.exports = (sequelize, DataTypes) => {
 module.exports =  {
-  async up (queryInterface, Sequelize, DataTypes) {
+  async up (queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
       id: { 
         type: Sequelize.UUID,
@@ -23,7 +25,8 @@ module.exports =  {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: true, // Default to 'true' if not provided
-      },created_ts: {
+      },
+      created_ts: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,  // Automatically set on create
@@ -33,6 +36,21 @@ module.exports =  {
         allowNull: true,
         defaultValue: null,  // Automatically set on update
       },
+      last_login: {
+        type: Sequelize.DATE,
+        allowNull: true,
+        defaultValue: Sequelize.NOW
+      },
+      last_frustated_login: {
+        type: Sequelize.DATE,
+        allowNull: true,
+        defaultValue: Sequelize.NOW
+      },
+      frustated_login_count: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: 0
+      }
     })
   },
 

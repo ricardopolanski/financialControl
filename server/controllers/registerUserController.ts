@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { Request, Response } from 'express'
 import SessionToken from '../models/sessionTokenModel'
 import User from '../models/userModel' // Import the User model
+import Joi from 'joi';
 
 // Function to generate tokens in xxxx-xxxx-xxxx-xxxx-xxxx format
 const generateToken = (): string => {
@@ -13,11 +14,53 @@ const generateToken = (): string => {
     .join('-')
 }
 
+const registerUserSchema = Joi.object({
+  username: Joi.string()
+    .alphanum()
+    .min(5)
+    .max(15)
+    .required()
+    .messages({
+      'string.alphanum': 'Username must contain only letters and numbers',
+      'string.min': 'Username must be at least 5 characters',
+      'string.max': 'Username must not exceed 15 characters',
+      'any.required': 'Username is required',
+    }),
+
+    password: Joi.string()
+    .min(8)
+    .pattern(/[A-Z]/, 'uppercase')
+    .pattern(/[a-z]/, 'lowercase')
+    .pattern(/[0-9]/, 'number')
+    .pattern(/[@$!%*?&]/, 'special character')
+    .required()
+    .messages({
+      'string.min': 'Password must be at least 8 characters long',
+      'string.pattern.name': 'Password must contain at least one {#name}',
+      'any.required': 'Password is required',
+    }),
+    
+    active: Joi.boolean().default(true)
+})
+
 export const registerUser = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const { username, password, active = true, created_ts, updated_ts } = req.body
+  const { error, value } = registerUserSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errorDetails = error.details.reduce((acc, err) => {
+      const key = err.path.join('.'); // Get field name
+      acc[key] = err.message; // Assign error message
+      return acc;
+    }, {} as Record<string, string>);
+  
+    return res.status(400).json({ success: false, errors: errorDetails });
+  }
+
+
+  const { username, password, active = true, created_ts, updated_ts, last_login, last_frustated_login, frustated_login_count } = value
 
   try {
     // Check if the username already exists
@@ -37,6 +80,9 @@ export const registerUser = async (
       active,
       created_ts,
       updated_ts,
+      last_login,
+      last_frustated_login,
+      frustated_login_count,
     })
 
     // Generate master_token and session_token

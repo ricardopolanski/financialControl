@@ -8,7 +8,11 @@ interface UserAttributes {
   password: string;
   active: boolean;
   created_ts: Date;
-  updated_ts: Date | null
+  updated_ts: Date | null;
+  last_login: Date;
+  last_frustated_login: Date
+  frustated_login_count: number;
+
 }
 
 // Define an interface for the User creation attributes (which may not require 'id')
@@ -20,7 +24,10 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public password!: string;
   public active!: boolean;
   public created_ts!: Date;
-  public updated_ts!: Date | null
+  public updated_ts!: Date | null;
+  public last_login!: Date;
+  public last_frustated_login!: Date
+  public frustated_login_count!: number
 }
 
 User.init(
@@ -53,6 +60,21 @@ User.init(
       allowNull: true,
       defaultValue: null,
     },
+    last_login: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW
+    },
+    last_frustated_login: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW
+    },
+    frustated_login_count: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
+    }
   },
   {
     sequelize,

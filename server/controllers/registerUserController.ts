@@ -24,6 +24,18 @@ export const validateUser = [
     .notEmpty()
     .withMessage('Username is required'),
 
+  body('first_name')
+    .isAlphanumeric()
+    .withMessage('First name must contain only letters')
+    .notEmpty()
+    .withMessage('First name is required'),
+
+  body('last_name')
+    .isAlphanumeric()
+    .withMessage('Last name must contain only letters')
+    .notEmpty()
+    .withMessage('Last name is required'),
+
   body('password')
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters long')
@@ -37,6 +49,18 @@ export const validateUser = [
     .withMessage('Password must contain at least one special character')
     .notEmpty()
     .withMessage('Password is required'),
+
+  body('security_question')
+    .matches(/^[a-zA-Z0-9\s!?.,;:'"-]*$/)
+    .withMessage('Security question must contain only letters')
+    .notEmpty()
+    .withMessage('Security question is required'),
+
+  body('security_answare')
+    .matches(/^[a-zA-Z0-9\s!?.,;:'"-]*$/)
+    .withMessage('Security answare must contain only letters')
+    .notEmpty()
+    .withMessage('Security answare is required'),
 
   body('active').optional().isBoolean().withMessage('Active must be a boolean value'),
 ]
@@ -52,7 +76,20 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
     })
   }
 
-  const { username, password, active = true, created_ts, updated_ts, last_login, last_frustated_login, frustated_login_count } = req.body
+  const {
+    username,
+    first_name,
+    last_name,
+    password,
+    active = true,
+    created_ts,
+    updated_ts,
+    last_login,
+    last_frustated_login,
+    frustated_login_count,
+    security_question,
+    security_answare
+  } = req.body
 
   try {
     // Check if the username already exists
@@ -67,6 +104,8 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
     // Create the user
     const user = await User.create({
       username,
+      first_name,
+      last_name,
       password: hashedPassword,
       active,
       created_ts,
@@ -74,6 +113,8 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
       last_login,
       last_frustated_login,
       frustated_login_count,
+      security_question,
+      security_answare
     })
 
     // Generate master_token and session_token
@@ -90,7 +131,7 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
       updated_ts,
     })
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: `User ${username} registered successfully`,
       statusCode: 200,

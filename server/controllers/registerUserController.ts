@@ -134,7 +134,7 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
     res.status(201).json({
       success: true,
       message: `User ${username} registered successfully`,
-      statusCode: 200,
+      statusCode: 201,
       data: {
         userName: username,
         userActive: active,

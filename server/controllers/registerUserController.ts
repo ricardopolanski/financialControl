@@ -24,13 +24,13 @@ export const validateUser = [
     .notEmpty()
     .withMessage('Username is required'),
 
-  body('first_name')
+  body('firstName')
     .isAlphanumeric()
     .withMessage('First name must contain only letters')
     .notEmpty()
     .withMessage('First name is required'),
 
-  body('last_name')
+  body('lastName')
     .isAlphanumeric()
     .withMessage('Last name must contain only letters')
     .notEmpty()
@@ -50,13 +50,13 @@ export const validateUser = [
     .notEmpty()
     .withMessage('Password is required'),
 
-  body('security_question')
+  body('securityQuestion')
     .matches(/^[a-zA-Z0-9\s!?.,;:'"-]*$/)
     .withMessage('Security question must contain only letters')
     .notEmpty()
     .withMessage('Security question is required'),
 
-  body('security_answare')
+  body('securityAnsware')
     .matches(/^[a-zA-Z0-9\s!?.,;:'"-]*$/)
     .withMessage('Security answare must contain only letters')
     .notEmpty()
@@ -78,8 +78,8 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
 
   const {
     username,
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     password,
     active = true,
     created_ts,
@@ -87,8 +87,8 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
     last_login,
     last_frustated_login,
     frustated_login_count,
-    security_question,
-    security_answare
+    securityQuestion,
+    securityAnsware
   } = req.body
 
   try {
@@ -104,8 +104,8 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
     // Create the user
     const user = await User.create({
       username,
-      first_name,
-      last_name,
+      firstName,
+      lastName,
       password: hashedPassword,
       active,
       created_ts,
@@ -113,8 +113,8 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
       last_login,
       last_frustated_login,
       frustated_login_count,
-      security_question,
-      security_answare
+      securityQuestion,
+      securityAnsware
     })
 
     // Generate master_token and session_token

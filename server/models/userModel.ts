@@ -5,8 +5,8 @@ import sequelize from "../config/db";
 interface UserAttributes {
   id: string;
   username: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   password: string;
   active: boolean;
   created_ts: Date;
@@ -14,8 +14,8 @@ interface UserAttributes {
   last_login: Date;
   last_frustated_login: Date
   frustated_login_count: number;
-  security_question: string;
-  security_answare: string
+  securityQuestion: string;
+  securityAnsware: string
 }
 
 // Define an interface for the User creation attributes (which may not require 'id')
@@ -24,8 +24,8 @@ interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: string;
   public username!: string;
-  public first_name!: string;
-  public last_name!: string;
+  public firstName!: string;
+  public lastName!: string;
   public password!: string;
   public active!: boolean;
   public created_ts!: Date;
@@ -33,8 +33,8 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public last_login!: Date;
   public last_frustated_login!: Date
   public frustated_login_count!: number
-  public security_question!: string;
-  public security_answare!: string;
+  public securityQuestion!: string;
+  public securityAnsware!: string;
 
 }
 
@@ -45,11 +45,11 @@ User.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
      },
-    first_name: {
+    firstName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    last_name: {
+    lastName: {
       type: DataTypes.STRING,
       allowNull: false,
     },  
@@ -92,11 +92,11 @@ User.init(
       allowNull: true,
       defaultValue: 0
     },
-    security_question: {
+    securityQuestion: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    security_answare: {
+    securityAnsware: {
       type: DataTypes.STRING,
       allowNull: false
     }

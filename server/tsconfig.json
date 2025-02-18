@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
+    "lib": ["es6"],
     "outDir": "../dist",
     "rootDir": "./src",
     "module": "CommonJS",    // Set to CommonJS
     "target": "ES6",
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
   },
+  "ts-node": {
+      "require": ["tsconfig-paths/register"]
+    },
   "include": ["src"]
 }

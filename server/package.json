@@ -37,9 +37,11 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.8",
+    "@types/node": "^22.13.4",
     "@types/pg": "^8.11.11",
     "@types/sequelize": "^4.28.20",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
   }
 }

@@ -5,6 +5,8 @@ import sequelize from "../config/db";
 interface UserAttributes {
   id: string;
   username: string;
+  firstName: string;
+  lastName: string;
   password: string;
   active: boolean;
   created_ts: Date;
@@ -12,7 +14,8 @@ interface UserAttributes {
   last_login: Date;
   last_frustated_login: Date
   frustated_login_count: number;
-
+  securityQuestion: string;
+  securityAnsware: string
 }
 
 // Define an interface for the User creation attributes (which may not require 'id')
@@ -21,6 +24,8 @@ interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: string;
   public username!: string;
+  public firstName!: string;
+  public lastName!: string;
   public password!: string;
   public active!: boolean;
   public created_ts!: Date;
@@ -28,6 +33,9 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public last_login!: Date;
   public last_frustated_login!: Date
   public frustated_login_count!: number
+  public securityQuestion!: string;
+  public securityAnsware!: string;
+
 }
 
 User.init(
@@ -37,6 +45,14 @@ User.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
      },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },  
     username: { 
       type: DataTypes.STRING, 
       allowNull: false, 
@@ -50,7 +66,8 @@ User.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true, // Default to 'true' if not provided
-    },created_ts: {
+    },
+    created_ts: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,  // Automatically set on create
@@ -58,7 +75,7 @@ User.init(
     updated_ts: {
       type: DataTypes.DATE,
       allowNull: true,
-      defaultValue: null,
+      defaultValue: null,  // Automatically set on update
     },
     last_login: {
       type: DataTypes.DATE,
@@ -74,6 +91,14 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
+    },
+    securityQuestion: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    securityAnsware: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   },
   {

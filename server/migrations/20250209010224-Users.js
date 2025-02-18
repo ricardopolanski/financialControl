@@ -1,7 +1,5 @@
 'use strict';
 
-const { allow } = require('joi');
-
 /** @type {import('sequelize-cli').Migration} */
 // module.exports = (sequelize, DataTypes) => {
 module.exports =  {
@@ -12,6 +10,14 @@ module.exports =  {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true
        },
+      first_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      last_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },  
       username: { 
         type: Sequelize.STRING, 
         allowNull: false, 
@@ -50,6 +56,14 @@ module.exports =  {
         type: Sequelize.INTEGER,
         allowNull: true,
         defaultValue: 0
+      },
+      security_question: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      security_answare: {
+        type: Sequelize.STRING,
+        allowNull: false
       }
     })
   },

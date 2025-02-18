@@ -5,6 +5,29 @@ import User from "../models/userModel";
 import { Sequelize } from "sequelize";
 import { formatDate } from "../helpers/formatDate"
 
+/* API Request body example:
+Method: GET
+
+{
+  "username": "username",
+  "password": "passwprd"
+} 
+
+Positive Response Body
+{
+    "message": "Login successful",
+    "token": "JWS token",
+    "last_login": "Weekday, Month day, YYYY at H:MM:SS AM/PM"
+}
+
+Positive Response Body Messages
+{ message: "User not found" });
+{ message: "User is inactive", });
+{ message: "Password blocked. User has 3 frustrated login attempts!", });
+{ message: "Wrong password" });      
+{ message: "Server error" });
+*/
+
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
 // User Login
@@ -46,7 +69,7 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
       res.status(200).json({
         message: "Login successful",
         token,
-        last_login: formatDate(user.last_login)
+        lastLogin: formatDate(user.last_login)
       });
       await User.update( { last_login: new Date() }, { where: { username: username } } );
       if (user.frustated_login_count > 0) {

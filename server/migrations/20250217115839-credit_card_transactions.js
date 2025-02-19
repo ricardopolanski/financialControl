@@ -13,7 +13,8 @@ module.exports = {
         allowNull: false
       },
       description: {
-        type: Sequelize.STRING        
+        type: Sequelize.STRING,
+        allowNull: false
       },
       amount: {
         type: Sequelize.FLOAT,  // Adjusted type for float
@@ -27,12 +28,13 @@ module.exports = {
         type: Sequelize.ENUM('pending', 'paid', 'overdue'),
         defaultValue: 'pending'
       },
-      due_date: {
+      due_day: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
       installment_number: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       notes: {
         type: Sequelize.STRING

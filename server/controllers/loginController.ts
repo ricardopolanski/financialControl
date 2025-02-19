@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
@@ -20,18 +20,20 @@ Positive Response Body
     "last_login": "Weekday, Month day, YYYY at H:MM:SS AM/PM"
 }
 
-Positive Response Body Messages
-{ message: "User not found" });
-{ message: "User is inactive", });
-{ message: "Password blocked. User has 3 frustrated login attempts!", });
-{ message: "Wrong password" });      
-{ message: "Server error" });
+Negative Response Body Messages
+{ message "Username is required" },
+{ message "Password is required" },
+{ message: "User not found" };
+{ message: "User is inactive" };
+{ message: "Password blocked. User has 3 frustrated login attempts!" };
+{ message: "Wrong password" };      
+{ message: "Server error" };
 */
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
 // User Login
-export const loginUser = async (req: Request, res: Response): Promise<any> => {
+export const loginUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   const { username, password } = req.body;
 
   try {
@@ -62,9 +64,7 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
     } else if (user && isPasswordCorrect && user.active) {
       const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
         expiresIn: "1h",
-      });
-
-      
+      });      
 
       res.status(200).json({
         message: "Login successful",
@@ -76,10 +76,8 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
         await User.update( { frustated_login_count: 0, last_login: new Date() }, { where: { username: username } } )
       }
     }
-
     
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    next(err)
   }
 };

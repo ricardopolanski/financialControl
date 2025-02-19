@@ -3,13 +3,13 @@ import CreditCardTransactions from '../models/creditCardTransactionsModel';
 export const creditCardService = async (transactionData: any) => {
   const {
     id,
-    date,
+    transactionDate,
     description,
     amount,
-    credit_card,
+    creditCard,
     status,
     dueDay,
-    installment_number,
+    installmentNumber,
     notes,
     created_ts,
     updated_ts
@@ -18,26 +18,26 @@ export const creditCardService = async (transactionData: any) => {
   // Create CC transaction
   const transaction = await CreditCardTransactions.create({
     id,
-    date,
+    transactionDate,
     description,
     amount,
-    credit_card,
+    creditCard,
     status,
     dueDay,
-    installment_number,
+    installmentNumber,
     notes,
     created_ts,
     updated_ts
   });
 
   return {
-    creditCardBank: transaction.credit_card,
+    creditCardBank: transaction.creditCard,
     description: transaction.description,
-    transactionDate: transaction.date,
+    transactionDate: transaction.transactionDate,
     dueDate: transaction.dueDay,
     amount: transaction.amount,
     status: transaction.status,
-    installmentNumber: transaction.installment_number,
+    installmentNumber: transaction.installmentNumber,
     notes: transaction.notes
   }
 };

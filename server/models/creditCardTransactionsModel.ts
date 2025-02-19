@@ -4,13 +4,13 @@ import sequelize from "../config/db";
 // Define an interface for the CreditCardTransaction model's attributes
 interface CreditCardTransactionsAttributes {
   id: string,
-  date: Date,
+  transactionDate: Date,
   description: string,
   amount: number,
-  credit_card: string,
+  creditCard: string,
   status: string, 
   dueDay: Date,
-  installment_number: number,
+  installmentNumber: number,
   notes: string,
   created_ts: Date,
   updated_ts: Date
@@ -22,13 +22,13 @@ interface CreditCardTransactionsCreationAttributes extends Optional<CreditCardTr
 
 class CreditCardTransactions extends Model<CreditCardTransactionsAttributes, CreditCardTransactionsCreationAttributes> implements CreditCardTransactionsAttributes {
   public id!: string;
-  public date!: Date;
+  public transactionDate!: Date;
   public description!: string;
   public amount!: number;
-  public credit_card!: string;
+  public creditCard!: string;
   public status!: string; 
   public dueDay!: Date;
-  public installment_number!: number;
+  public installmentNumber!: number;
   public notes!: string;
   public created_ts!: Date;
   public updated_ts!: Date
@@ -41,7 +41,7 @@ CreditCardTransactions.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    date: {
+    transactionDate: {
       type: DataTypes.DATE,
       allowNull: false
     },
@@ -52,7 +52,7 @@ CreditCardTransactions.init(
       type: DataTypes.FLOAT,  // Adjusted type for float
       allowNull: false
     },
-    credit_card: {
+    creditCard: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -64,7 +64,7 @@ CreditCardTransactions.init(
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    installment_number: {
+    installmentNumber: {
       type: DataTypes.INTEGER
     },
     notes: {

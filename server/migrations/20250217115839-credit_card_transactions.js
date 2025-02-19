@@ -8,7 +8,7 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true
       },
-      date: {
+      transaction_date: {
         type: Sequelize.DATE,
         allowNull: false
       },

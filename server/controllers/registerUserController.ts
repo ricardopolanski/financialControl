@@ -1,152 +1,81 @@
-import bcrypt from 'bcryptjs'
-import crypto from 'crypto'
-import { Request, Response } from 'express'
-import { body, validationResult } from 'express-validator'
-import SessionToken from '../models/sessionTokenModel'
-import User from '../models/userModel' // Import the User model
+import { Request, Response, NextFunction } from 'express'
+import { validationResult } from 'express-validator'
+import { registerUserService } from '../services/userService'
 
-// Function to generate tokens in xxxx-xxxx-xxxx-xxxx-xxxx format
-const generateToken = (): string => {
-  return Array(4)
-    .fill(null)
-    .map(() => crypto.randomBytes(2).toString('hex')) // 2 bytes = 4 hex characters
-    .map((segment) => segment.padStart(5, '0')) // Ensure each segment is 5 characters long
-    .join('-')
+/* API Request body example:
+Method: POST
+
+{
+  "username": STRING, // required
+  "firstName": STRING, // required
+  "lastName": "STRING, // required
+  "password": STRING, // required
+  "securityQuestion": STRING, // required
+  "securityAnsware": "STRING, // required
+  "active": BOOLEAN // not required
 }
 
-// ✅ Validation Middleware
-export const validateUser = [
-  body('username')
-    .isAlphanumeric()
-    .withMessage('Username must contain only letters and numbers')
-    .isLength({ min: 5, max: 15 })
-    .withMessage('Username must be between 5 and 15 characters')
-    .notEmpty()
-    .withMessage('Username is required'),
+Positive Response Body
+{
+    "success": true,
+    "message": "User ${USERNAME} registered successfully",
+    "statusCode": 201,
+    "data": {
+        "userName": ${USERNAME},
+        "userActive": BOOLEAN,
+        "masterToken": "XXXXX-XXXXX-XXXXX-XXXXX",
+        "sessionToken": "XXXXX-XXXXX-XXXXX-XXXXX"
+    }
+}
 
-  body('firstName')
-    .isAlphanumeric()
-    .withMessage('First name must contain only letters')
-    .notEmpty()
-    .withMessage('First name is required'),
+Negative Response Body Messages
+Message('Username must contain only letters and numbers')
+Message('Username must be between 5 and 15 characters')
+Message('Username is required'),
+Message('First name must contain only letters')
+Message('First name is required'),
+Message('Last name must contain only letters')
+Message('Last name is required'),
+Message('Password must be at least 8 characters long')
+Message('Password must contain at least one uppercase letter')
+Message('Password must contain at least one lowercase letter')
+Message('Password must contain at least one number')
+Message('Password must contain at least one special character')
+Message('Password is required'),
+Message('Security question must contain only letters')
+Message('Security question is required'),
+Message('Security answer must contain only letters')
+Message('Security answer is required'),
+Message('Active must be a boolean value'),
+*/
 
-  body('lastName')
-    .isAlphanumeric()
-    .withMessage('Last name must contain only letters')
-    .notEmpty()
-    .withMessage('Last name is required'),
-
-  body('password')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long')
-    .matches(/[A-Z]/)
-    .withMessage('Password must contain at least one uppercase letter')
-    .matches(/[a-z]/)
-    .withMessage('Password must contain at least one lowercase letter')
-    .matches(/[0-9]/)
-    .withMessage('Password must contain at least one number')
-    .matches(/[@$!%*?&]/)
-    .withMessage('Password must contain at least one special character')
-    .notEmpty()
-    .withMessage('Password is required'),
-
-  body('securityQuestion')
-    .matches(/^[a-zA-Z0-9\s!?.,;:'"-]*$/)
-    .withMessage('Security question must contain only letters')
-    .notEmpty()
-    .withMessage('Security question is required'),
-
-  body('securityAnsware')
-    .matches(/^[a-zA-Z0-9\s!?.,;:'"-]*$/)
-    .withMessage('Security answare must contain only letters')
-    .notEmpty()
-    .withMessage('Security answare is required'),
-
-  body('active').optional().isBoolean().withMessage('Active must be a boolean value'),
-]
-
-// ✅ Updated Register Function
-export const registerUser = async (req: Request, res: Response): Promise<any> => {
+export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   // Handle validation errors
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       errors: errors.array().map((err) => ({ message: err.msg }))
-    })
+    });
   }
 
-  const {
-    username,
-    firstName,
-    lastName,
-    password,
-    active = true,
-    created_ts,
-    updated_ts,
-    last_login,
-    last_frustated_login,
-    frustated_login_count,
-    securityQuestion,
-    securityAnsware
-  } = req.body
-
   try {
-    // Check if the username already exists
-    const existingUser = await User.findOne({ where: { username } })
-    if (existingUser) {
-      return res.status(400).json({ success: false, message: 'Username already taken' })
-    }
-
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    // Create the user
-    const user = await User.create({
-      username,
-      firstName,
-      lastName,
-      password: hashedPassword,
-      active,
-      created_ts,
-      updated_ts,
-      last_login,
-      last_frustated_login,
-      frustated_login_count,
-      securityQuestion,
-      securityAnsware
-    })
-
-    // Generate master_token and session_token
-    const master_token = generateToken()
-    const session_token = generateToken()
-
-    // Create session tokens for the new user
-    await SessionToken.create({
-      user_id: user.id,
-      master_token,
-      session_token,
-      active,
-      created_ts: new Date(),
-      updated_ts,
-    })
-
+    const userData = req.body;
+    const user = await registerUserService(userData)
     res.status(201).json({
       success: true,
-      message: `User ${username} registered successfully`,
+      message: `User ${user.userName} registered successfully`,
       statusCode: 201,
-      data: {
-        userName: username,
-        userActive: active,
-        masterToken: master_token,
-        sessionToken: session_token,
-      },
+      data: user,
     })
   } catch (err) {
-    console.error(err)
-    res.status(500).json({
-      success: false,
-      message: 'Server error',
-    })
+    const error =  err as Error;
+    if (error.message === "Username already taken") {
+      return res.status(400).json({
+        success: false,
+        message: "Username already taken",
+      });
+    }
+    next(err); // Pass unexpected errors to middleware
   }
 }

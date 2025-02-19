@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/db";
 import authRouter from "./routes/authRouter";
 import sequelize from "./config/db";
+import { errorHandler } from './middlewares/errorHandler';
 
 dotenv.config();
 const app = express();
@@ -16,15 +17,10 @@ app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data
 // Connect to database
 connectDB();
 
-// Sync all models (this will drop all tables and recreate them)
-// sequelize.sync({ force: true }).then(() => {
-//   console.log("All tables have been dropped and recreated.");
-// }).catch((error) => {
-//   console.error("Error syncing the database:", error);
-// });
-
 // Register routes
 app.use("/api/auth", authRouter);
+
+app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 3000;

@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
-import { Sequelize } from "sequelize";
 import { formatDate } from "../helpers/formatDate"
 
 /* API Request body example:

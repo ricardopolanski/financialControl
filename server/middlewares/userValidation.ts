@@ -4,9 +4,10 @@ import { Request, Response, NextFunction } from 'express';
 
 export const validateUser: (ValidationChain | ((req: Request, res: Response, next: NextFunction) => void))[] = [
   body('username')
-    .isAlphanumeric().withMessage('Username must contain only letters and numbers')
-    .isLength({ min: 5, max: 15 }).withMessage('Username must be between 5 and 15 characters')
-    .notEmpty().withMessage('Username is required'),
+  .isLength({ min: 5, max: 15 }).withMessage('Username must be between 5 and 15 characters')
+  .matches(/^(?=.*[a-z])(?=.*\d)[A-Za-z\d]+$/)
+  .withMessage('Username must contain at least one letter and one number')
+  .notEmpty().withMessage('Username is required'),
 
   body('firstName')
     .isAlphanumeric().withMessage('First name must contain only letters')

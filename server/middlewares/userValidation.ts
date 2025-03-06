@@ -4,17 +4,18 @@ import { Request, Response, NextFunction } from 'express';
 
 export const validateUser: (ValidationChain | ((req: Request, res: Response, next: NextFunction) => void))[] = [
   body('username')
-  .isLength({ min: 5, max: 15 }).withMessage('Username must be between 5 and 15 characters')
-  .matches(/^(?=.*[a-z])(?=.*\d)[A-Za-z\d]+$/)
-  .withMessage('Username must contain at least one letter and one number')
-  .notEmpty().withMessage('Username is required'),
+    .isLowercase().withMessage('Unsername must contain lowercase')
+    .isLength({ min: 5, max: 15 }).withMessage('Username must be between 5 and 15 characters')
+    .matches(/^(?=.*[a-z])(?=.*\d)[A-Za-z\d]+$/)
+    .withMessage('Username must contain at least one letter and one number')
+    .notEmpty().withMessage('Username is required'),
 
   body('firstName')
-    .isAlphanumeric().withMessage('First name must contain only letters')
+    .isAlpha().withMessage('First name must contain only letters')
     .notEmpty().withMessage('First name is required'),
 
   body('lastName')
-    .isAlphanumeric().withMessage('Last name must contain only letters')
+    .isAlpha().withMessage('Last name must contain only letters')
     .notEmpty().withMessage('Last name is required'),
 
   body('password')

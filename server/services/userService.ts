@@ -1,64 +1,50 @@
 import bcrypt from 'bcryptjs';
-import User from '../models/userModel';
-import SessionToken from '../models/sessionTokenModel';
 import { generateToken } from '../utils/tokenGenerator';
+import * as userRepository from '../repositories/userRepository';
 
 export const registerUserService = async (userData: any) => {
-  const {
-    username,
-    firstName,
-    lastName,
-    password,
-    active = true,
-    created_ts,
-    updated_ts,
-    last_login,
-    last_frustated_login,
-    frustated_login_count,
-    securityQuestion,
-    securityAnsware
-  } = userData;
-
-  // Check if user already exists
-  const existingUser = await User.findOne({ where: { username } });
+  const existingUser = await userRepository.findUserByUsername(userData.username);
   if (existingUser) throw new Error('Username already taken');
 
-  // Hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  userData.password = await bcrypt.hash(userData.password, 10);
+  
+  const user = await userRepository.createUser(userData);
 
-  // Create user
-  const user = await User.create({
-    username,
-    firstName,
-    lastName,
-    password: hashedPassword,
-    active,
-    created_ts,
-    updated_ts,
-    last_login,
-    last_frustated_login,
-    frustated_login_count,
-    securityQuestion,
-    securityAnsware
-  });
-
-  // Generate session tokens
   const master_token = generateToken();
   const session_token = generateToken();
 
-  await SessionToken.create({
-    user_id: user.id,
+  await userRepository.createSessionToken(user.id, {
     master_token,
     session_token,
-    active,
+    active: userData.active,
     created_ts: new Date(),
-    updated_ts,
+    updated_ts: new Date(),
   });
 
   return {
-    userName: username,
-    userActive: active,
+    userName: user.username,
+    userActive: user.active,
     masterToken: master_token,
     sessionToken: session_token,
   };
+};
+
+export const updateUserService = async (userData: any) => {
+  if (userData.frustated_login) {
+    await userRepository.incrementFrustratedLogin(userData.username);
+    await userRepository.updateUser(userData.username, { last_frustated_login: new Date() });
+  }
+
+  if (userData.blockUser) {
+    await userRepository.updateUser(userData.username, { active: false });
+  }
+
+  if (userData.setUserStatus !== undefined) {
+    await userRepository.updateUser(userData.username, { active: userData.active });
+  }
+};
+
+export const findUserService = async (userData: any) => {
+  const user = await userRepository.findUserByUsername(userData.username);
+  return user
 };

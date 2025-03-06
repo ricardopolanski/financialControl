@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
 import { formatDate } from "../helpers/formatDate"
+import * as userRepository from '../services/userService'
 
 /* API Request body example:
 Method: GET
@@ -46,16 +47,11 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordCorrect) {
-      await user.increment('frustated_login_count', { by: 1 });
-      
-      await User.update(
-        { last_frustated_login: new Date() },
-        { where: { username: username } }
-      );      
+    if (!isPasswordCorrect) {   
+      await userRepository.updateUserService({username, frustated_login: true})
 
       if (user.frustated_login_count === 3 && user.active) {
-        await User.update({ active: false }, { where: { username: username } } )
+        await userRepository.updateUserService({ username, blockkUser: true })
         return res.status(400).json({ message: "Password blocked. User has 3 frustrated login attempts!", });
       }
 

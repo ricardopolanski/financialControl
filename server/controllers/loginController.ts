@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
 import { formatDate } from "../helpers/formatDate"
-import * as userRepository from '../services/userService'
+import * as userServices from '../services/userService'
+import * as loginServices from '../services/loginServices'
 
 /* API Request body example:
 Method: GET
@@ -30,14 +31,14 @@ Negative Response Body Messages
 { message: "Server error" };
 */
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
+// const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
 // User Login
 export const loginUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { username } });
+    const user = await userServices.findUserService({ username })
 
     if (!user) {
       return res.status(400).json({ message: "User not found" });
@@ -48,18 +49,16 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {   
-      await userRepository.updateUserService({username, frustated_login: true})
+      await userServices.updateUserService({username, frustated_login: true})
 
       if (user.frustated_login_count === 3 && user.active) {
-        await userRepository.updateUserService({ username, blockkUser: true })
+        await userServices.updateUserService({ username, blockkUser: true })
         return res.status(400).json({ message: "Password blocked. User has 3 frustrated login attempts!", });
       }
 
       return res.status(400).json({ message: "Wrong password" });      
-    } else if (user && isPasswordCorrect && user.active) {
-      const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
-        expiresIn: "1h",
-      });      
+    } else if (user && isPasswordCorrect && user.active) {    
+      const token = await loginServices.generateJWT({ id: user.id, username: user.username})
 
       res.status(200).json({
         message: "Login successful",

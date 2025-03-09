@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import jwt from "jsonwebtoken";
 import { generateToken } from '../utils/tokenGenerator';
 import * as userRepository from '../repositories/userRepository';
 
@@ -48,3 +49,11 @@ export const findUserService = async (userData: any) => {
   const user = await userRepository.findUserByUsername(userData.username);
   return user
 };
+
+export const generateJWT = async (userData: any) => {
+  const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
+  return jwt.sign({ id: userData.id, username: userData.username }, JWT_SECRET, {
+          expiresIn: "1h",
+        });    
+}
+

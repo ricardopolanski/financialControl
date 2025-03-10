@@ -4,6 +4,7 @@ import sequelize from "../config/db";
 // Define an interface for the CreditCardTransaction model's attributes
 interface CreditCardTransactionsAttributes {
   id: string,
+  companyId: string,
   transactionDate: Date,
   description: string,
   amount: number,
@@ -22,6 +23,7 @@ interface CreditCardTransactionsCreationAttributes extends Optional<CreditCardTr
 
 class CreditCardTransactions extends Model<CreditCardTransactionsAttributes, CreditCardTransactionsCreationAttributes> implements CreditCardTransactionsAttributes {
   public id!: string;
+  public companyId!: string;
   public transactionDate!: Date;
   public description!: string;
   public amount!: number;
@@ -37,6 +39,11 @@ class CreditCardTransactions extends Model<CreditCardTransactionsAttributes, Cre
 CreditCardTransactions.init(
   {
     id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
+    companyId: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true

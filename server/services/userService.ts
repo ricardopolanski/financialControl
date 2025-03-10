@@ -3,28 +3,32 @@ import jwt from "jsonwebtoken";
 import { generateToken } from '../utils/tokenGenerator';
 import * as userRepository from '../repositories/userRepository';
 
-export const registerUserService = async (userData: any) => {
+export const registerUserService = async (userData: any, options: any = {}) => {
+  // const option = options;
+
   const existingUser = await userRepository.findUserByUsername(userData.username);
   if (existingUser) throw new Error('Username already taken');
-
   userData.password = await bcrypt.hash(userData.password, 10);
   
-  const user = await userRepository.createUser(userData);
+  const user = await userRepository.createUser(userData, options);
+
+  if (!user) throw new Error('Failed to create user');
 
   const master_token = generateToken();
   const session_token = generateToken();
 
-  await userRepository.createSessionToken(user.id, {
+  await userRepository.createSessionToken(user.dataValues.id, {
     master_token,
     session_token,
     active: userData.active,
     created_ts: new Date(),
     updated_ts: new Date(),
-  });
+  }, options
+);
 
   return {
-    userName: user.username,
-    userActive: user.active,
+    userName: user.dataValues.username,
+    userActive: user.dataValues.active,
     masterToken: master_token,
     sessionToken: session_token,
   };
@@ -45,7 +49,7 @@ export const updateUserService = async (userData: any) => {
   }
 };
 
-export const findUserService = async (userData: any) => {
+export const findUserService = async (userData: any, transaction?: any) => {
   const user = await userRepository.findUserByUsername(userData.username);
   return user
 };

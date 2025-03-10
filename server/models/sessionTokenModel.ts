@@ -31,42 +31,41 @@ SessionToken.init(
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
+    },
+    user_id: { type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'users',  // This should reference the 'users' table
+        key: 'id',
       },
-      user_id: { 
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'users',  // This should reference the 'users' table
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      master_token: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      session_token: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,  // Default to 'true' if not provided
-      },
-      created_ts: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,  // Automatically set on create
-      },
-      updated_ts: {
-        type: DataTypes.DATE,
-        allowNull: true,
-        defaultValue: null,
-      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
+    master_token: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    session_token: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,  // Default to 'true' if not provided
+    },
+    created_ts: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,  // Automatically set on create
+    },
+    updated_ts: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null,
+    },
   },
   {
     sequelize,

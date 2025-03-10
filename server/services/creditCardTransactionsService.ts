@@ -3,6 +3,7 @@ import CreditCardTransactions from '../models/creditCardTransactionsModel';
 export const creditCardService = async (transactionData: any) => {
   const {
     id,
+    companyId,
     transactionDate,
     description,
     amount,
@@ -18,6 +19,7 @@ export const creditCardService = async (transactionData: any) => {
   // Create CC transaction
   const transaction = await CreditCardTransactions.create({
     id,
+    companyId,
     transactionDate,
     description,
     amount,

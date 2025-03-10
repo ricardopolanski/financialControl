@@ -4,6 +4,7 @@ import sequelize from "../config/db";
 // Define an interface for the User model's attributes
 interface UserAttributes {
   id: string;
+  companyId: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -23,6 +24,7 @@ interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
   public id!: string;
+  public companyId!: string;
   public username!: string;
   public firstName!: string;
   public lastName!: string;
@@ -44,6 +46,16 @@ User.init(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
+    },
+    companyId: { 
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      references: {
+        model: 'companies',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
      },
     firstName: {
       type: DataTypes.STRING,

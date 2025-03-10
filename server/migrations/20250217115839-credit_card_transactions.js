@@ -8,6 +8,14 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true
       },
+      company_id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        references: {
+          model: 'companies',
+          key: 'company_id'
+        }
+      },
       transaction_date: {
         type: Sequelize.DATE,
         allowNull: false

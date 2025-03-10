@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": ["es6"],
     "outDir": "../dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "module": "CommonJS",    // Set to CommonJS
     "target": "ES6",
     "strict": true,
@@ -10,10 +10,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "typeRoots": ["./src/types", "./node_modules/@types"]
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "sourceMap": true,
   },
   "ts-node": {
       "require": ["tsconfig-paths/register"]
     },
-  "include": ["src", "src/types/express.d.ts"]
+  // "include": ["src", "src/types/express.d.ts"]
 }

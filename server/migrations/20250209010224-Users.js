@@ -9,7 +9,15 @@ module.exports =  {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true
-       },
+      },
+      company_id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        references: {
+          model: 'companies',
+          key: 'company_id'
+        }
+      },
       first_name: {
         type: Sequelize.STRING,
         allowNull: false,

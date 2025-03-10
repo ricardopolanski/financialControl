@@ -13,6 +13,11 @@
     "db:reset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate",
     "db:recreate": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
   },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -41,6 +46,7 @@
     "@types/pg": "^8.11.11",
     "@types/sequelize": "^4.28.20",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
   }
 }

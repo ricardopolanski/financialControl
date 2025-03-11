@@ -1,0 +1,14 @@
+// // src/App.jsx or src/App.tsx
+// import React from 'react';
+// import UserRegistrationForm from './components/userRegistrationForm';
+
+// function App() {
+//   return (
+//     <div className="app-container">
+//       <h1>Financial Control</h1>
+//       <UserRegistrationForm />
+//     </div>
+//   );
+// }
+
+// export default App;

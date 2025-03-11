@@ -1,0 +1,113 @@
+/* Import the main styles from registration if needed */
+@import './UserRegistrationForm.css';
+
+/* Login-specific styles */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #e0f2ff, #ffffff);
+  padding: 20px;
+}
+
+.form-wrapper {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+/* Remember me checkbox */
+input[type="checkbox"] {
+  accent-color: #4f46e5;
+  cursor: pointer;
+}
+
+/* Forgot password link */
+.forgot-password-link {
+  color: #4f46e5;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #3730a3;
+  text-decoration: underline;
+}
+
+/* Sign up link styling */
+.signup-link {
+  font-size: 14px;
+  color: #555;
+  margin-top: 20px;
+}
+
+.signup-link a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* Form field container to ensure proper spacing */
+.form-field-container {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+/* Enhanced error message styling */
+.error-message {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  padding-left: 2px;
+  font-weight: 500;
+  display: block;
+}
+
+/* Make input fields with errors have a more prominent red border */
+input[aria-invalid="true"] {
+  border-color: #e53e3e !important;
+  border-width: 2px !important;
+}
+
+/* Add a subtle shake animation for fields with errors when they appear */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.error-message {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Make the red asterisk for required fields more visible */
+.text-red-500 {
+  color: #e53e3e;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+/* Field highlight animation */
+.field-highlight {
+  animation: highlight 1s ease-in-out;
+}
+
+@keyframes highlight {
+  0%, 100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(245, 101, 101, 0.1);
+  }
+}

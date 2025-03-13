@@ -1,4 +1,6 @@
 export const formatDate = (date: Date) => {
+  if (!date) return 'First time loggin in'
+
     return new Date(date).toLocaleString('en-US', {
       weekday: 'long', // 'short' for abbreviated weekday
       year: 'numeric',

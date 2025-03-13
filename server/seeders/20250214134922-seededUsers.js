@@ -6,6 +6,7 @@ module.exports = {
     await queryInterface.bulkInsert('users', [
       {
         id: uuidv4(),
+        role_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
         username: 'admin',
         first_name: 'Admin',
         last_name: 'QA',

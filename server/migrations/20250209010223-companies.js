@@ -11,7 +11,7 @@ module.exports = {
       },
       company_name: { 
         type: Sequelize.STRING, 
-        allowNull: false, 
+        allowNull: true, 
         unique: true
       },
       active: {

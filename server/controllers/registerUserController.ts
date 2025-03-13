@@ -3,15 +3,16 @@ import { validationResult } from 'express-validator'
 import { registerUserService } from '../services/userService'
 import { registerCompanyService } from '../services/companyServices'
 import sequelize from '../config/db'
+import * as response from '../utils/responseHandler'
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   // Handle validation errors
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    res.status(400).json({
+    response.sendValidationError(res, {
       success: false,
       errors: errors.array().map((err) => ({ message: err.msg }))
-    });
+    })
   }
 
   const transaction = await sequelize.transaction();
@@ -22,12 +23,12 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     const companyData = await registerCompanyService(company, { transaction });
     
     if (companyData.companyId) {
-      const user = await registerUserService({ ...userData, companyId: companyData.companyId }, { transaction });
+      const role_id = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
+      const user = await registerUserService({ ...userData, roleId: role_id, companyId: companyData.companyId }, { transaction });
       await transaction.commit();
-      res.status(201).json({
-        success: true,
+
+      response.sendSuccess(res, {
         message: `User ${user.userName} registered successfully`,
-        statusCode: 201,
         data: user,
         company: companyData
       })
@@ -37,10 +38,10 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     await transaction.rollback();
     const error =  err as Error;
     if (error.message === "Username already taken" || error.message === "Company already exist") {
-      return res.status(400).json({
+      response.sendValidationError(res, {
         success: false,
-        message: error.message
-      });
+        errors: error.message
+      })
     }
     next(err); // Pass unexpected errors to middleware
   }

@@ -1,5 +1,6 @@
 import { body, validationResult, ValidationChain } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
+import * as response from '../utils/responseHandler';
 
 
 export const validateUser: (ValidationChain | ((req: Request, res: Response, next: NextFunction) => void))[] = [
@@ -40,10 +41,14 @@ export const validateUser: (ValidationChain | ((req: Request, res: Response, nex
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({
+      return response.sendValidationError(res, {
         success: false,
         errors: errors.array().map((err) => ({ message: err.msg }))
-      });
+      })
+      // return res.status(400).json({
+      //   success: false,
+      //   errors: errors.array().map((err) => ({ message: err.msg }))
+      // });
     }
     next(); // No errors, move to the next middleware/controller
   }

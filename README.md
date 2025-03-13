@@ -1,89 +1,123 @@
-# Starting from scratch
+# Financial Control
 
-## 1️. Clone the Repository
-``` bash
-git clone <repository_url>
-cd <project_directory>   Replace <project_directory> with the actual name
-```
+A comprehensive financial management system with an Express backend and React frontend.
 
-## 2️. Set up the Backend (Express)
-```bash
-cd server
-npm install   Install backend dependencies
-```
+## 🚀 Quick Start
 
-## 3️. Configure the Database
-### 3.1. Download and Install Docker Desktop:
+### Prerequisites
+- Node.js (v16 or higher)
+- Docker Desktop
+- Git
 
-- Windows/macOS: Go to the official Docker website (https://www.docker.com/products/docker-desktop) and download the appropriate installer for your operating system. Follow the installation instructions provided on the website.
+### Installation
+
+1. **Clone the repository**
+    ```bash
+    git clone https://github.com/your-username/financial-control.git cd financial-control
+    ```
+
+2. **Set up environment variables**
+    Create a `.env` file in the root directory with:
+   
+    ```bash
+       DB_USER=postgres
+       DB_PASSWORD=test123
+       DB_HOST=localhost
+       DB_NAME=financial_control
+       DB_PORT=5432
+       JWT_SECRET=your_jwt_secret_key
+    ```   
+
+3. **Install dependencies and set up database**
+
+    ***Install dependencies***
+    ```bash
+    npm install
+    ```
+    ***Create and seed database***
+    ```bash
+    npm run db:recreate
+    ```
+
+4. **Start the application**
+
+    ***Start backend server***
+   ```bash
+    npm run start
+   ```
+
+   ***In a separate terminal, start frontend development server***
+   ```bash
+    npm run dev
+   ```
+
+
+## 🛠️ Development
+
+### Database Management
+- **Create database**: `npm run db:create`
+- **Run migrations**: `npm run db:migrate`
+- **Rollback migrations**: `npm run db:rollback`
+- **Reset database**: `npm run db:reset`
+- **Recreate database**: `npm run db:recreate`
+
+### Git Workflow
+1. Create a feature branch from master
+2. When ready to merge:
+   ```bash
+    #Save your changes if needed
     
-- Linux: Docker installation on Linux varies depending on the distribution. Refer to the official Docker documentation for your specific distribution (https://docs.docker.com/engine/install/).
+    git stash -m 'your comment'
 
-### 3.2. Start Docker Desktop:
+    #Update master
 
-> After installation, start Docker Desktop. You might need to accept some terms and conditions.  Make sure Docker is running before proceeding. You should see the Docker icon in your system tray or menu bar.
+    git checkout master git pull
 
-### 3.3 Pull the PostgreSQL Image:
+    #Return to your branch and merge
 
-Open a terminal or command prompt.  Use the following command to pull the latest PostgreSQL image from Docker Hub:
-```bash
-docker run -d --name my_postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydatabase -p 5432:5432 postgres
-```
+    git checkout your-feature-branch git merge master
+    
+    #Apply stashed changes if any
 
-### 3.4. Start Postgres:
+    git stash apply
+   ```
 
-Back to Docker Desktop and start the Postgres if this one wasn't started.
+3. Recreate database after merging: `npm run db:recreate`
 
-# Steps to sync your local code with git master branch
+## 📚 Project Structure
 
-### 1- Disconnect from Postgres DB if you'r connected (DBeaver)
+<pre>
+📂financial-control/
+├── 📂server/           # Backend Express application
+│   ├── 📂controllers/  # API route handlers
+│   ├── 📂models/       # Sequelize models
+│   ├── 📂routes/       # API routes
+│   └── 📂migrations/   # Database migrations
+├── 📂src/              # Frontend React application
+│   ├── 📂components/   # React components
+│   ├── 📂pages/        # Page components
+│   ├── 📂services/     # API service calls
+│   └── 📂utils/        # Helper functions
+└── 📜package.json      # Project dependencies and scripts
+</pre>
 
-### 2- Stop you backend service, if this one is running
 
-### 3- Do you have any changes in your local branch? No? Skipp to step 3.2
+## 🔗 Project Resources
+- [Jira Board](https://financial-control.atlassian.net/jira/software/projects/FC/boards/1)
+- [TestRail](https://financialcontrol.testrail.io/)
 
-#### 3.1- In your local branch run
-```bash
-git stash -m 'type your comment here to know what you are saving'
-```
+## 📝 License
+[MIT](LICENSE)
 
-#### 3.2- Checkout to master branch
-```bash
-git checkout master
-```
+## 👥 Contributors
+- [Ricardo Polanski](https://github.com/ricardopolanski)
+- [Patricie Lopes](https://github.com/ricardopolanski)
 
-#### 3.3- Pull the remote changes into your local
-```bash
-git pull
-```
+---
 
-#### 3.4- Checkout to your local branch
-```bash
-git checkout "local-branch"
-```
+*This project is a financial control management system built with React, Express, and PostgreSQL.*
 
-#### 3.5- Merge the master branch into your feature branch
-```bash
-git merge master
-```
 
-#### 3.5- Apply the changes you saved locally
-```bash
-git stash apply
-```
 
-#### 3.6- Recreate DB
-```bash
-npm run db:recreate
-```
 
-#### 3.6- Start Backend
-```bash
-npm run start
-```
 
-# Jira Project Board
-https://financial-control.atlassian.net/jira/software/projects/FC/boards/1
-
-# TestRail Board
-https://financialcontrol.testrail.io/

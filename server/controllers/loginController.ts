@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import User from "../models/userModel";
 import { formatDate } from "../helpers/formatDate"
 import * as userServices from '../services/userService'
 import * as loginServices from '../services/loginServices'
+import * as response from '../utils/responseHandler'
 
 /* API Request body example:
 Method: GET
@@ -42,11 +42,11 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     if (!user) {
       return res.status(400).json({ message: "User not found" });
-    } else if (!user.active) {
+    } else if (!user.dataValues.active) {
       return res.status(400).json({ message: "User is inactive", });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.dataValues.password);
 
     if (!isPasswordCorrect) {   
       await userServices.updateUserService({username, frustated_login: true})
@@ -57,20 +57,20 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
       }
 
       return res.status(400).json({ message: "Wrong password" });      
-    } else if (user && isPasswordCorrect && user.active) {    
-      const token = await loginServices.generateJWT({ id: user.id, username: user.username})
+    } else if (user && isPasswordCorrect && user.dataValues.active) {    
+      const token = await loginServices.generateJWT({ id: user.dataValues.id, username: user.dataValues.username})
 
-      res.status(200).json({
+      response.sendSuccess(res, {
         message: "Login successful",
         token,
-        lastLogin: formatDate(user.last_login)
+        lastLogin: formatDate(user.dataValues.last_login)
       });
+
       await User.update( { last_login: new Date() }, { where: { username: username } } );
-      if (user.frustated_login_count > 0) {
+      if (user.dataValues.frustated_login_count > 0) {
         await User.update( { frustated_login_count: 0, last_login: new Date() }, { where: { username: username } } )
       }
     }
-    
   } catch (err) {
     next(err)
   }

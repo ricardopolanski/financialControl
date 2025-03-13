@@ -1,5 +1,7 @@
 'use strict';
 
+const { type } = require('os');
+
 /** @type {import('sequelize-cli').Migration} */
 // module.exports = (sequelize, DataTypes) => {
 module.exports =  {
@@ -9,6 +11,15 @@ module.exports =  {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true
+      },
+      role_id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        allowNull: false,
+        references: {
+          model: 'user_roles',
+          key: 'role_id'
+        }
       },
       company_id: {
         type: Sequelize.UUID,
@@ -53,12 +64,12 @@ module.exports =  {
       last_login: {
         type: Sequelize.DATE,
         allowNull: true,
-        defaultValue: Sequelize.NOW
+        defaultValue: null
       },
       last_frustated_login: {
         type: Sequelize.DATE,
         allowNull: true,
-        defaultValue: Sequelize.NOW
+        defaultValue: null
       },
       frustated_login_count: {
         type: Sequelize.INTEGER,

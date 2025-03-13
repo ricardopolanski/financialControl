@@ -30,7 +30,7 @@ Company.init(
      },
     companyName: { 
       type: DataTypes.STRING, 
-      allowNull: false, 
+      allowNull: true, 
       unique: true
     },
     active: {

@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from "jsonwebtoken";
 import { generateToken } from '../utils/tokenGenerator';
 import * as userRepository from '../repositories/userRepository';
+import * as userRolesRepository from '../repositories/userRolesRepository';
 
 export const registerUserService = async (userData: any, options: any = {}) => {
   // const option = options;
@@ -11,6 +12,7 @@ export const registerUserService = async (userData: any, options: any = {}) => {
   userData.password = await bcrypt.hash(userData.password, 10);
   
   const user = await userRepository.createUser(userData, options);
+  const userRole = await userRolesRepository.findRoleById(userData.roleId);
 
   if (!user) throw new Error('Failed to create user');
 
@@ -31,6 +33,7 @@ export const registerUserService = async (userData: any, options: any = {}) => {
     userActive: user.dataValues.active,
     masterToken: master_token,
     sessionToken: session_token,
+    userRole: userRole
   };
 };
 

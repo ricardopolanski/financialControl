@@ -1,13 +1,24 @@
 {
   "compilerOptions": {
-    "module": "ESNext",       // Use ESNext module system
-    "target": "ESNext",       // Use ESNext for modern JavaScript
-    "outDir": "./dist",       // Directory to output compiled files
-    "esModuleInterop": true,  // Enables interoperability between CommonJS and ES Modules
-    "moduleResolution": "node",
+    // "module": "ESNext",       // Use ESNext module system
+    // "target": "ESNext",       // Use ESNext for modern JavaScript
     "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "lib": ["es6"],
+    "outDir": "../dist",
+    "rootDir": "./",
+    "module": "CommonJS",    // Set to CommonJS
+    "target": "ES6",
     "strict": true,
-    "jsx": "react-jsx"
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "sourceMap": true,
   },
+  "ts-node": {
+      "require": ["tsconfig-paths/register"]
+    },
   "include": ["App/src/**/*"]
 }

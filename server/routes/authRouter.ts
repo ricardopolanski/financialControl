@@ -6,14 +6,17 @@ import { validateLogin } from '../middlewares/validateLogin'
 import { currencies } from '../controllers/currenciesControler'
 import { creditCardTransactions } from '../controllers/creditCardTransactions'
 import { setUserStatus } from '../controllers/setUserStatus'
-import { authenticateUser } from '../middlewares/auth'
+import { authenticateUser } from '../controllers/authController'
+import { validateUserRole } from '../middlewares/validadeUserRole'
+// import { createUser } from '../controllers/createUser'
 
 const router = Router()
 
 router.post('/register', validateUser, registerUser  )
 router.post('/login', validateLogin, loginUser)
-router.get('/currencies', authenticateUser, currencies)
-router.post('/creditcard', authenticateUser, creditCardTransactions)
-router.post('/userstatus', authenticateUser, setUserStatus)
+router.get('/currencies', authenticateUser, validateUserRole, currencies)
+router.post('/creditcard', authenticateUser, validateUserRole, creditCardTransactions)
+router.post('/userstatus', authenticateUser, validateUserRole, setUserStatus)
+router.post('/createuser', validateUser, authenticateUser, validateUserRole, registerUser)
 
 export default router

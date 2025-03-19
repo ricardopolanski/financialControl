@@ -1,33 +1,24 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { Response, Request, NextFunction } from "express";
 import * as response from '../utils/responseHandler'
-const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
+import * as authService from '../services/loginServices'
+import AuthenticatedRequest from "../types/AuthenticatedRequest";
 
-// Define a custom interface that extends Express Request
-interface AuthenticatedRequest extends Request {
-  user?: { id: number }; // Adding 'user' property
-}
 
-export const authenticateUser = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Expect "Bearer <token>"
+export const authenticateUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization?.split(' ')[1];
   
   if (!token) {
-    response.sendUnauthorizedError(res, {
-      message: 'Access denied. No token provided.'
-    })
-    // res.status(401).json({ error: 'Access denied. No token provided.' });
-    return; // Add return statement here
+    return response.sendUnauthorizedError(res, { message: 'No token provided.' });
   }
   
   try {
-    const decoded = jwt.verify(token, SECRET_KEY) as { userId: number };
-    req.user = { id: decoded.userId }; // Attach user info to request
+    // Authentication should be handled by a service
+    const decoded = await authService.verifyToken(token);
+    
+    // Set user data in request for downstream use
+    req.user = decoded;
     next();
   } catch (error) {
-    response.sendUnauthorizedError(res, {
-      message: 'Invalid or expired token.'
-    })
-    // res.status(403).json({ error: 'Invalid or expired token.' });
-    return; // Add return statement here
+    return response.sendUnauthorizedError(res, { message: 'Invalid token.' });
   }
 };

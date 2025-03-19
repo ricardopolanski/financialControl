@@ -6,3 +6,12 @@ export const generateJWT = async (userData: any) => {
           expiresIn: "1h",
         });    
 }
+
+export const verifyToken = async (userData: any) => {
+  return jwt.verify(userData.token, userData.SECRET_KEY) as {
+    id: string;
+    username?: string;
+    companyId?: string;
+    roleId?: string;
+  };
+}

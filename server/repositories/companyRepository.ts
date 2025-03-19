@@ -7,3 +7,7 @@ export const findCompanyByName = async (companyName: string) => {
 export const createCompany = async (companydata: any, options: any) => {
   return await Companies.create(companydata, options);
 };
+
+export const findCompanyById = async (companyId: string) => {
+  return await Companies.findOne({ where: { companyId } });
+};

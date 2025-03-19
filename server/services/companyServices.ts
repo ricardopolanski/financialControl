@@ -17,8 +17,3 @@ export const registerCompanyService = async (companyData: any, options: any) => 
   };
 };
 
-export const findCompanyByService = async (companyName: string) => {
-  const user = await companyRepository.findCompanyByName(companyName);
-  return user
-}
-

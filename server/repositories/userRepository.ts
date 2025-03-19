@@ -20,3 +20,7 @@ export const incrementFrustratedLogin = async (username: string) => {
 export const createSessionToken = async (userId: string, tokens: any, options: any) => {
   return await SessionToken.create({ user_id: userId, ...tokens }, options);
 };
+
+export const findUserById = async (id: string) => {
+  return await User.findOne({ where: { id } });
+};

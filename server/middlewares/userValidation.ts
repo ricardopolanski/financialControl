@@ -45,10 +45,6 @@ export const validateUser: (ValidationChain | ((req: Request, res: Response, nex
         success: false,
         errors: errors.array().map((err) => ({ message: err.msg }))
       })
-      // return res.status(400).json({
-      //   success: false,
-      //   errors: errors.array().map((err) => ({ message: err.msg }))
-      // });
     }
     next(); // No errors, move to the next middleware/controller
   }

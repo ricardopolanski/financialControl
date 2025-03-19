@@ -9,9 +9,7 @@ export const validateCCTransaction: (ValidationChain | ((req: Request, res: Resp
     body('status'),
     body('dueDay'),
     body('installment_number'),
-    body('notes'),
-    
-    
+    body('notes')
 ]
 
 

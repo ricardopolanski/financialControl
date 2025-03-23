@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import { creditCardService } from '../services/creditCardTransactionsService'
+import AuthenticatedRequest from "../types/AuthenticatedRequest";
 
-
-export const creditCardTransactions = async (req: Request, res: Response): Promise<void> => {
+export const creditCardTransactions = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const creditCardData = req.body;
+    const creditCardData = {
+      ...req.body,
+      companyId: req.user?.companyId
+    }
         const creditCardTransaction = await creditCardService(creditCardData)
         res.status(201).json({
           success: true,

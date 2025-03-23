@@ -24,3 +24,4 @@ export const createSessionToken = async (userId: string, tokens: any, options: a
 export const findUserById = async (id: string) => {
   return await User.findOne({ where: { id } });
 };
+

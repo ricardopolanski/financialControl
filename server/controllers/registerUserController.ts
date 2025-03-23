@@ -8,6 +8,7 @@ import * as response from '../utils/responseHandler'
 import { Transaction } from 'sequelize'
 
  export const registerController = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  console.log('REAL CONTROLLER CALLED!', req.body);
   try {
     const result = await registerUserWithCompany(req.body);
     

@@ -1,12 +1,7 @@
 import * as companyRepository from '../repositories/companyRepository';
 
-export const registerCompanyService = async (companyData: any, options: any) => {
-  if (companyData) {
-    const existingCompany = await companyRepository.findCompanyByName(companyData.companyName);
-    if (existingCompany) throw new Error('Company already exist');
-  }
-  
-  const company = await companyRepository.createCompany(companyData, options);
+export const registerCompanyService = async (options?: any) => {  
+  const company = await companyRepository.createCompany(options);
   if (!company) throw new Error('Failed to create company');
 
   return {

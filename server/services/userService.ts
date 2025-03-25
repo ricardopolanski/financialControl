@@ -3,9 +3,15 @@ import jwt from "jsonwebtoken";
 import { generateToken } from '../utils/tokenGenerator';
 import * as userRepository from '../repositories/userRepository';
 import * as userRolesRepository from '../repositories/userRolesRepository';
+import { userRoles } from '../constants';
+import * as companyRepository from '../repositories/companyRepository';
 
-export const registerUserService = async (userData: any, options: any = {}) => {
-  // const option = options;
+
+export const registerUserService = async (data: any, options: any = {}) => {
+  const userData = {
+    ...data,
+    roleId: data.roleId ? data.roleId : userRoles.ADMIN.ID
+  };
 
   const existingUser = await userRepository.findUserByUsername(userData.username);
   if (existingUser) throw new Error('Username already taken');
@@ -15,6 +21,8 @@ export const registerUserService = async (userData: any, options: any = {}) => {
   const userRole = await userRolesRepository.findRoleById(userData.roleId);
 
   if (!user) throw new Error('Failed to create user');
+
+  const companyData = await companyRepository.findCompanyById(user.dataValues.companyId)
 
   const master_token = generateToken();
   const session_token = generateToken();
@@ -33,7 +41,8 @@ export const registerUserService = async (userData: any, options: any = {}) => {
     userActive: user.dataValues.active,
     masterToken: master_token,
     sessionToken: session_token,
-    userRole: userRole
+    userRole: userRole,
+    company: companyData
   };
 };
 
@@ -63,4 +72,5 @@ export const generateJWT = async (userData: any) => {
           expiresIn: "1h",
         });    
 }
+
 

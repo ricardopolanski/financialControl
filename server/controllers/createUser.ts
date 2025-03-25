@@ -1,22 +1,14 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import * as userRepository from '../repositories/userRepository'
 import * as response from '../utils/responseHandler'
-import { validationResult } from 'express-validator'
 import AuthenticatedRequest from '../types/AuthenticatedRequest'
+import * as userService from '../services/userService';
 
 export const createUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<any> => {
     const userData = {
         ...req.body,
         companyId: req.user?.companyId
     };
-
-    const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        response.sendValidationError(res, {
-          success: false,
-          errors: errors.array().map((err) => ({ message: err.msg }))
-        })
-      }
 
     try {
         const user = await userRepository.findUserByUsername(userData.username);
@@ -35,7 +27,13 @@ export const createUser = async (req: AuthenticatedRequest, res: Response, next:
             } 
         } else {
             req.body = userData;
-            next();
+            const result = await userService.registerUserService(req.body);
+            return response.sendSuccess(res, {
+                message: `User ${result.userName} registered successfully`,
+                data: result,
+                
+            });
+            // next();
         }
     }catch (err) {
         next(err)

@@ -5,7 +5,6 @@ import * as userCompanyService from '../server/services/userCompanyService';
 
 // Import your controller function directly
 import { registerController } from '../server/controllers/registerUserController'; // Adjust the path as needed
-import { NextFunction } from 'express';
 
 // Mock the userCompanyService module
 jest.mock('../server/services/userCompanyService', () => ({
